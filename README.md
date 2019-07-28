@@ -6,4 +6,4 @@ Compiling this project in visual studio. You can change parameters in constant.h
 
 ### Pictures
 You can see the game like this, enjoy it!
-![game](https://github.com/chouqiu/FootBall-Simulator-Engine/blob/master/Docs/footbal.PNG)
+![game](https://github.com/chouqiu/FootBall-Simulator-Engine/blob/master/Docs/footbal.PNG?raw=true)
