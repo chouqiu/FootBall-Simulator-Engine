@@ -41,6 +41,23 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
   {
      player->SetMaxSpeed(Prm.PlayerMaxSpeedWithoutBall);
   }
+
+  // game off, just fall back...
+  if( (FALSE == player->Pitch()->GameOn() || TRUE == player->Pitch()->GoalKeeperHasBall())
+          && player->CurrentState() != FieldPlayer::returnhome
+          && FALSE == player->InHomeRegion())
+  {
+    //when game is off, message is unusable.. @ning
+    player->GetFSM()->ChangeState(ReturnToHomeRegion::Instance());
+    /*
+    Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+                              player->ID(),
+                              player->ID(),
+                              Msg_GoCurrentHome,
+                              NULL);
+    */
+    return;
+  }
   
   //if a player is closest to the ball, and his team is not in control, or he is 
   //the controlling player, then chase it!
@@ -55,22 +72,16 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
                               Msg_ChaseBall,
                               NULL);
   }
-
-  // game off, just fall back...
-  if(FALSE == player->Pitch()->GameOn() && FALSE == player->InHomeRegion()
-          && player->CurrentState() != FieldPlayer::returnhome)
-  {
-    Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
-                              player->ID(),
-                              player->ID(),
-                              Msg_GoCurrentHome,
-                              NULL);
-  }
 }
 
 
 bool GlobalPlayerState::OnMessage(FieldPlayer* player, const Telegram& telegram)
 {
+  if(FALSE == player->Pitch()->GameOn())
+  {
+    return FALSE;
+  }
+
   switch(telegram.Msg)
   {
   case Msg_ReceiveBall:

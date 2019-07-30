@@ -320,6 +320,11 @@ void PutBallBackInPlay::Execute(GoalKeeper* keeper)
     #ifdef GOALY_STATE_INFO_ON
     debug_con << "Goaly " << keeper->ID() << " kick the ball to the opponents goal!" <<  "";
     #endif
+
+    //go back to tending the goal   
+    keeper->GetFSM()->ChangeState(TendGoal::Instance());
+
+    return;
   }
 
   keeper->SetVelocity(Vector2D());
