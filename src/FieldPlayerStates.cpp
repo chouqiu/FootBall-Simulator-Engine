@@ -43,12 +43,12 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
   }
 
   // game off, just fall back...
-  if( (FALSE == player->Pitch()->GameOn() || TRUE == player->Pitch()->GoalKeeperHasBall())
-          && player->CurrentState() != FieldPlayer::returnhome
-          && FALSE == player->InHomeRegion())
+  if((FALSE == player->Pitch()->GameOn() || TRUE == player->Pitch()->GoalKeeperHasBall())
+        && player->CurrentState() != FieldPlayer::wait)
   {
     //when game is off, message is unusable.. @ning
-    player->GetFSM()->ChangeState(ReturnToHomeRegion::Instance());
+    //player->GetFSM()->ChangeState(ReturnToHomeRegion::Instance());
+    player->GetFSM()->ChangeState(Wait::Instance());
     /*
     Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
                               player->ID(),
@@ -60,7 +60,13 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
   }
   
   //if a player is closest to the ball, and his team is not in control, or he is 
-  //the controlling player, then chase it!
+  //the controlling player, then chase it! @ning
+  // use guard mode .. @ning
+  if(TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
+  {
+    player->GetFSM()->ChangeState(Guard::Instance());
+  }
+  /*
   if(player->Pitch()->GameOn()
         && player->isClosestTeamMemberToBall() && player->Team()->InControl() == FALSE
         && player->CurrentState() != FieldPlayer::chaseball)
@@ -72,16 +78,12 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
                               Msg_ChaseBall,
                               NULL);
   }
+  */
 }
 
 
 bool GlobalPlayerState::OnMessage(FieldPlayer* player, const Telegram& telegram)
 {
-  if(FALSE == player->Pitch()->GameOn())
-  {
-    return FALSE;
-  }
-
   switch(telegram.Msg)
   {
   case Msg_ReceiveBall:
@@ -510,8 +512,16 @@ void Wait::Execute(FieldPlayer* player)
   }
 
   //add guard mode .. @ning
-  if (player->Pitch()->GameOn())
+  /*
+  if(player->Pitch()->InSameRegion(player, player->Ball()))
   {
+    player->GetFSM()->ChangeState(Guard::Instance());
+
+    return;
+  }
+  */
+  //if (player->Pitch()->GameOn())
+  //{
    //if the ball is nearer this player than any other team member  AND
     //there is not an assigned receiver AND neither goalkeeper has
     //the ball, go chase it
@@ -525,12 +535,7 @@ void Wait::Execute(FieldPlayer* player)
      return;
    }
    */
-    if (player->Pitch()->InSameRegion(player, player->Ball()))
-    {
-      player->GetFSM()->ChangeState(Guard::Instance());
-
-      return;
-    }
+    
 
     //we don't need to go home here, we set it when enter wait state.. @ning
     /*
@@ -543,7 +548,7 @@ void Wait::Execute(FieldPlayer* player)
                             NULL);
     }
     */
-  }
+  //}
 }
 
 void Wait::Exit(FieldPlayer* player){}
@@ -571,31 +576,29 @@ void Guard::Execute(FieldPlayer *player)
 {
 	//if the game is on, then guard the field, or, go back home region.
 	//here we treat wait state as central state...
-	if (player->Pitch()->GameOn())
+	if (player->Pitch()->GameOn() && TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
 	{
-		if (TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
-		{
-			if ((FALSE == player->Team()->InControl() || TRUE == player->isClosestPlayerOnPitchToBall())
+			if ((FALSE == player->Team()->InControl() || TRUE == player->isClosestTeamMemberToBall())
 					&& FALSE == player->Pitch()->GoalKeeperHasBall())
 			{
 				player->GetFSM()->ChangeState(ChaseBall::Instance());
 
 				return;
 			}
-		}
-		else
-		{
-			player->GetFSM()->ChangeState(Wait::Instance());
+      
+      if(TRUE == player->isFarFromHomeRegion() && FALSE == player->isClosestTeamMemberToBall())
+      {
+        player->GetFSM()->ChangeState(Wait::Instance());
 
-			return;
-		}
+        return;
+      }
 	}
-	else
-	{
-		player->GetFSM()->ChangeState(ReturnToHomeRegion::Instance());
+  else
+  {
+    player->GetFSM()->ChangeState(Wait::Instance());
 
-		return;
-	}
+    return;
+  }
 }
 
 void Guard::Exit(FieldPlayer *player)
