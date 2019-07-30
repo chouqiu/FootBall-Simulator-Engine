@@ -165,6 +165,25 @@ PlayerBase* SoccerTeam::DetermineBestSupportingAttacker()
     }
   }
 
+  //cannot be null
+  if (BestPlayer == NULL)
+  {
+    it = m_Players.begin();
+    for (it; it != m_Players.end(); ++it)
+    {
+      if ( (*it)->Role() != FieldConst::goal_keeper && (*it) != m_pControllingPlayer )
+      {
+        BestPlayer = (*it);
+        break;
+      }
+    }
+
+    if(BestPlayer == NULL)
+    {
+      BestPlayer = *(m_Players.begin());
+    }
+  }
+
   return BestPlayer;
 }
 

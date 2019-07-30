@@ -193,6 +193,7 @@ void PlayerBase::FindSupport()const
                             Team()->SupportingPlayer()->ID(),
                             Msg_SupportAttacker,
                             NULL);
+    return;
   }
     
   PlayerBase* BestSupportPly = Team()->DetermineBestSupportingAttacker();
