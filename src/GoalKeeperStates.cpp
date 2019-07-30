@@ -263,9 +263,6 @@ void PutBallBackInPlay::Enter(GoalKeeper* keeper)
   //let the team know that the keeper is in control
   keeper->Team()->SetControllingPlayer(keeper);
 
-  // stop the game when keeper get the ball
-  keeper->Pitch()->SetGameOff();
-
   //send all the players home
   //keeper->Team()->Opponents()->ReturnAllFieldPlayersToHome();
   //keeper->Team()->ReturnAllFieldPlayersToHome();
@@ -273,6 +270,9 @@ void PutBallBackInPlay::Enter(GoalKeeper* keeper)
   keeper->Team()->Opponents()->ChangeToDefending();
   keeper->Team()->ReturnAllFieldPlayersToHome(FALSE);
   keeper->Team()->Opponents()->ReturnAllFieldPlayersToHome(FALSE);
+
+  // stop the game when keeper get the ball
+  keeper->Pitch()->SetGameOff();
 }
 
 
