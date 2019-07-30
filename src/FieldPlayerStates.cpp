@@ -457,10 +457,12 @@ void Wait::Enter(FieldPlayer* player)
   //if the game is not on make sure the target is the center of the player's
   //home region. This is ensure all the players are in the correct positions
   //ready for kick off
-  if (!player->Pitch()->GameOn())
-  {
-    player->Steering()->SetTarget(player->HomeRegion()->Center());
-  }
+  //if (!player->Pitch()->GameOn())
+  //{
+  //  player->Steering()->SetTarget(player->HomeRegion()->Center());
+  //}
+  //when player is in waing, he always need to return to his region. @ning
+  player->Steering()->SetTarget(player->HomeRegion()->Center());
 }
 
 void Wait::Execute(FieldPlayer* player)
@@ -470,7 +472,9 @@ void Wait::Execute(FieldPlayer* player)
   {
     player->Steering()->ArriveOn();
 
-    return;
+    //we don't need to return immediately, let the bullet fly for a while,
+    //but maybe lead to fail passing ball.. @ning
+    //return;
   }
 
   else
@@ -494,6 +498,7 @@ void Wait::Execute(FieldPlayer* player)
     return;
   }
 
+  //add guard mode .. @ning
   if (player->Pitch()->GameOn())
   {
    //if the ball is nearer this player than any other team member  AND
@@ -509,13 +514,15 @@ void Wait::Execute(FieldPlayer* player)
      return;
    }
    */
-	if (player->Pitch()->InSameRegion(player, player->Ball()))
-	{
-		player->GetFSM()->ChangeState(Guard::Instance());
+    if (player->Pitch()->InSameRegion(player, player->Ball()))
+    {
+      player->GetFSM()->ChangeState(Guard::Instance());
 
-		return;
-	}
+      return;
+    }
 
+    //we don't need to go home here, we set it when enter wait state.. @ning
+    /*
     if (player->InHomeRegion() == FALSE)
     {
       Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
@@ -524,6 +531,7 @@ void Wait::Execute(FieldPlayer* player)
                             Msg_GoCurrentHome,
                             NULL);
     }
+    */
   }
 }
 
