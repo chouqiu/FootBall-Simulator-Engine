@@ -307,6 +307,25 @@ bool PlayerBase::InHotRegion()const
          Pitch()->PlayingArea()->Length()/3.0;
 }
 
+bool PlayerBase::InGuardRegion()const
+{
+  int diff = m_iHomeRegion - this->Pitch()->GetRegionIndexFromPos(Ball()->Pos());
+
+  int range = (diff < 0 ? (diff + FieldConst::NumRegionsVertical) : diff) % FieldConst::NumRegionsVertical;
+
+  if (range >=0 && (range <= 1 || abs(FieldConst::NumRegionsVertical-range) <= 1))
+  {
+    return true; 
+  }
+
+  return false;
+}
+
+void PlayerBase::SetHomeRegion(int region)
+{
+  m_iHomeRegion = NewRegion;
+}
+
 bool PlayerBase::isAheadOfAttacker()const
 {
   return fabs(Pos().x - Team()->OpponentsGoal()->Center().x) <

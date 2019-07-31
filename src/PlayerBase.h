@@ -55,6 +55,10 @@ protected:
   //the region this player moves to before kickoff
   int                     m_iDefaultRegion;
 
+  //the region indexes this player should be guard.
+  int                     m_iGuardRegionMax;
+  int                     m_iGuardRegionMin;
+
   //the distance to the ball (in squared-space). This value is queried 
   //a lot so it's calculated once each time-step and stored here.
   double                   m_dDistSqToBall;
@@ -146,6 +150,9 @@ public:
   //the area close to the opponent's goal
   bool        InHotRegion()const;
 
+  //return true if the ball is in players guard region
+  bool        InGuardRegion()const;
+
   FieldConst::player_role Role()const{return m_PlayerRole;}
 
   double       DistSqToBall()const{return m_dDistSqToBall;}
@@ -156,14 +163,14 @@ public:
   double       DistToOppGoal()const;
   double       DistToHomeGoal()const;
 
-  void        SetDefaultHomeRegion(){m_iHomeRegion = m_iDefaultRegion;}
-
   SoccerBall* const        Ball()const;
   SoccerPitch* const       Pitch()const;
   SteeringBehaviors*const  Steering()const{return m_pSteering;}
   const Region* const      HomeRegion()const;
   int                      HomeRegionIndex() {return m_iHomeRegion;}
-  void                     SetHomeRegion(int NewRegion){m_iHomeRegion = NewRegion;}
+  void                     SetHomeRegion(int NewRegion);
+  void                     SetDefaultHomeRegion(){/*m_iHomeRegion = m_iDefaultRegion;*/return SetHomeRegion(m_iDefaultRegion);}
+
   SoccerTeam*const         Team()const{return m_pTeam;}
   
 };

@@ -62,10 +62,10 @@ void GlobalPlayerState::Execute(FieldPlayer* player)
   //if a player is closest to the ball, and his team is not in control, or he is 
   //the controlling player, then chase it! @ning
   // use guard mode .. @ning
-  if(TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
-  {
-    player->GetFSM()->ChangeState(Guard::Instance());
-  }
+  //if(TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
+  //{
+  //  player->GetFSM()->ChangeState(Guard::Instance());
+  //}
   /*
   if(player->Pitch()->GameOn()
         && player->isClosestTeamMemberToBall() && player->Team()->InControl() == FALSE
@@ -512,14 +512,13 @@ void Wait::Execute(FieldPlayer* player)
   }
 
   //add guard mode .. @ning
-  /*
-  if(player->Pitch()->InSameRegion(player, player->Ball()))
+  if(true == player->InGuardRegion())
   {
     player->GetFSM()->ChangeState(Guard::Instance());
 
     return;
   }
-  */
+  
   //if (player->Pitch()->GameOn())
   //{
    //if the ball is nearer this player than any other team member  AND
@@ -576,7 +575,7 @@ void Guard::Execute(FieldPlayer *player)
 {
 	//if the game is on, then guard the field, or, go back home region.
 	//here we treat wait state as central state...
-	if (player->Pitch()->GameOn() && TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
+	if (player->Pitch()->GameOn())
 	{
 			if ((FALSE == player->Team()->InControl() || TRUE == player->isClosestTeamMemberToBall())
 					&& FALSE == player->Pitch()->GoalKeeperHasBall())
