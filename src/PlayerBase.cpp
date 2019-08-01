@@ -314,7 +314,7 @@ bool PlayerBase::InGuardRegion(int homeidx, int otheridx)const
 
   int range = diff % FieldConst::NumRegionsVertical;
 
-  if (range >=0 && (range == 1 || (FieldConst::NumRegionsVertical-range) == 1))
+  if (range ==0 || range == 1 || (FieldConst::NumRegionsVertical-range) == 1)
   {
     return true; 
   }
