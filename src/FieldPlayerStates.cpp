@@ -525,7 +525,7 @@ void Wait::Execute(FieldPlayer* player)
   }
 
   //add guard mode .. @ning
-  if(true == player->InGuardRegion())
+  if(player->Pitch()->GameOn() && true == player->InGuardRegion())
   {
     player->GetFSM()->ChangeState(Guard::Instance());
 
@@ -599,8 +599,8 @@ void Guard::Execute(FieldPlayer *player)
 				return;
 			}
       
-      if(true == player->Pitch()->GoalKeeperHasBall() || (true == player->isFarFromHomeRegion() 
-            && false == player->isClosestTeamMemberToBall()))
+      if(true == player->Pitch()->GoalKeeperHasBall() || true == player->isFarFromHomeRegion() 
+            || true == player->Team()->InControl())
       {
         player->GetFSM()->ChangeState(Wait::Instance());
 
