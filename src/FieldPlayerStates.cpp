@@ -526,11 +526,20 @@ void Wait::Execute(FieldPlayer* player)
   }
 
   //add guard mode .. @ning
-  if(player->Pitch()->GameOn() && true == player->InGuardRegion() && false == player->Team()->InControl())
+  if(player->Pitch()->GameOn() && true == player->InGuardRegion())
   {
-    player->GetFSM()->ChangeState(Guard::Instance());
+    if (false == player->Team()->InControl())
+    {
+      player->GetFSM()->ChangeState(Guard::Instance());
 
-    return;
+      return;
+    }
+    else if (player->isClosestTeamMemberToBall())
+    {
+      player->GetFSM()->ChangeState(ChaseBall::Instance());
+
+      return;
+    }
   }
   
   //if (player->Pitch()->GameOn())
