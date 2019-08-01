@@ -606,6 +606,13 @@ void Guard::Execute(FieldPlayer *player)
 
         return;
       }
+
+      player->Steering()->ArriveOff();
+
+      player->SetVelocity(Vector2D(0,0));
+
+      //the player should keep his eyes on the ball!
+      player->TrackBall();
 	}
   else
   {
