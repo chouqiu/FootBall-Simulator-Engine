@@ -539,7 +539,8 @@ void Wait::Execute(FieldPlayer* player)
 
       return;
     }
-    else if (player->isClosestTeamMemberToBall())
+    //to avoid player chasing ball when he just pass it to others.. @ning
+    else if (true == player->isClosestTeamMemberToBall() && false == player->isControllingPlayer())
     {
       player->GetFSM()->ChangeState(ChaseBall::Instance());
 
