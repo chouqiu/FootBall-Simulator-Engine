@@ -590,7 +590,7 @@ void Guard::Execute(FieldPlayer *player)
 	//here we treat wait state as central state...
 	if (player->Pitch()->GameOn())
 	{
-			if ((FALSE == player->Team()->InControl() || TRUE == player->isClosestTeamMemberToBall())
+			if (FALSE == player->Team()->InControl() && TRUE == player->Pitch()->InSameRegion(this, Ball())
 					&& FALSE == player->Pitch()->GoalKeeperHasBall())
 			{
 				player->GetFSM()->ChangeState(ChaseBall::Instance());
