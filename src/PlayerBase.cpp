@@ -305,11 +305,16 @@ bool PlayerBase::InGuardRegion()const
 
 bool PlayerBase::InGuardRegion(int homeidx, int otheridx)const
 {
-  int diff = homeidx - otheridx;
+  int diff = abs(homeidx - otheridx);
 
-  int range = (diff < 0 ? (diff + FieldConst::NumRegionsVertical) : diff) % FieldConst::NumRegionsVertical;
+  if (diff > FieldConst::NumRegionsVertical + 1)
+  {
+    return false;
+  }
 
-  if (range >=0 && (range <= 1 || abs(FieldConst::NumRegionsVertical-range) <= 1))
+  int range = diff % FieldConst::NumRegionsVertical;
+
+  if (range >=0 && (range == 1 || (FieldConst::NumRegionsVertical-range) == 1))
   {
     return true; 
   }
