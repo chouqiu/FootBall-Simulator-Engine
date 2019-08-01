@@ -243,8 +243,8 @@ void ChaseBall::Execute(FieldPlayer* player)
     return;
   }
 
-  if ((player->isFarFromHomeRegion() && false == player->isControllingPlayer()) 
-        || (true == player->Team()->InControl() && false == player->isClosestTeamMemberToBall()))
+  if (true == player->Team()->InControl() && false == player->isClosestTeamMemberToBall()
+        && false == player->isControllingPlayer())
   {
     player->GetFSM()->ChangeState(Wait::Instance());
 
