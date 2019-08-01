@@ -609,8 +609,8 @@ void Guard::Execute(FieldPlayer *player)
 				return;
 			}
       
-      if(true == player->Pitch()->GoalKeeperHasBall() || true == player->isFarFromHomeRegion() 
-            || true == player->Team()->InControl())
+      if(true == player->Pitch()->GoalKeeperHasBall() || true == player->Team()->InControl()
+            || false == player->InGuardRegion())
       {
         player->GetFSM()->ChangeState(Wait::Instance());
 
