@@ -541,7 +541,7 @@ void Wait::Execute(FieldPlayer* player)
     }
     //to avoid player chasing ball when he just pass it to others.. @ning
     //else if (true == player->isClosestTeamMemberToBall() && false == player->isControllingPlayer())
-    else if (true == player->isReceivePlayer())
+    else if (true == player->isReceivePlayer() || true == player->isClosestTeamMemberToBall())
     {
       player->GetFSM()->ChangeState(ChaseBall::Instance());
 
@@ -729,7 +729,7 @@ void KickBall::Execute(FieldPlayer* player)
    player->Ball()->Kick(KickDirection, power);
     
    //change state   
-   player->GetFSM()->ChangeState(Wait::Instance());
+   player->GetFSM()->ChangeState(Guard::Instance());
    
    player->FindSupport();
   
