@@ -317,7 +317,7 @@ bool PlayerBase::InGuardRegion(int homeidx, int otheridx)const
   return false;
 }
 
-void PlayerBase::SetHomeRegion(int region)
+void PlayerBase::SetHomeRegion(int NewRegion)
 {
   m_iHomeRegion = NewRegion;
 }
