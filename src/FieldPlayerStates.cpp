@@ -525,7 +525,7 @@ void Wait::Execute(FieldPlayer* player)
   }
 
   //add guard mode .. @ning
-  if(player->Pitch()->GameOn() && true == player->InGuardRegion())
+  if(player->Pitch()->GameOn() && true == player->InGuardRegion() && false == player->Team()->InControl())
   {
     player->GetFSM()->ChangeState(Guard::Instance());
 
