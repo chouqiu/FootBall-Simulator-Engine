@@ -273,16 +273,7 @@ bool PlayerBase::InHomeRegion()const
 
 bool PlayerBase::isFarFromHomeRegion()const
 {
-  int cur = Pitch()->GetRegionIndexFromPos(Pos());
-  if (cur >= 0 && abs(cur-m_iHomeRegion) >= FieldConst::iMaxDistFromHomeRegion)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-  
+  return !InGuardRegion(m_iHomeRegion, Pitch()->GetRegionIndexFromPos(Pos()));
 }
 
 bool PlayerBase::AtTarget()const
@@ -309,7 +300,12 @@ bool PlayerBase::InHotRegion()const
 
 bool PlayerBase::InGuardRegion()const
 {
-  int diff = m_iHomeRegion - this->Pitch()->GetRegionIndexFromPos(Ball()->Pos());
+  return InGuardRegion(Pitch()->GetRegionIndexFromPos(Pos()), Pitch()->GetRegionIndexFromPos(Ball()->Pos()));
+}
+
+bool PlayerBase::InGuardRegion(int homeidx, int otheridx)const
+{
+  int diff = homeidx - otheridx;
 
   int range = (diff < 0 ? (diff + FieldConst::NumRegionsVertical) : diff) % FieldConst::NumRegionsVertical;
 

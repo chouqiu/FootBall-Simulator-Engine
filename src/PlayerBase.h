@@ -118,10 +118,6 @@ public:
   //of his home region
   bool        InHomeRegion()const;
 
-  //returns true if the player is too far from his 
-  //position, especially for defenders...
-  bool        isFarFromHomeRegion()const;
-
   //returns true if this player is ahead of the attacker
   bool        isAheadOfAttacker()const;
   
@@ -150,8 +146,15 @@ public:
   //the area close to the opponent's goal
   bool        InHotRegion()const;
 
-  //return true if the ball is in players guard region
+  //return true if the ball is in players guard region, that means, monitor the distance
+  //between the ball and the player.. @ning
   bool        InGuardRegion()const;
+  bool        InGuardRegion(int homeidx, int otheridx)const;
+
+  //returns true if the player is too far from his 
+  //position, especially for defenders...
+  //monitor the distance between player and his home region.. @ning
+  bool        isFarFromHomeRegion()const;
 
   FieldConst::player_role Role()const{return m_PlayerRole;}
 

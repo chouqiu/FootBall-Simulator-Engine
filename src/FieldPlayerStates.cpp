@@ -243,9 +243,21 @@ void ChaseBall::Execute(FieldPlayer* player)
     return;
   }
 
+  if (player->isFarFromHomeRegion() && false == player->isControllingPlayer())
+  {
+    player->GetFSM()->ChangeState(Wait::Instance());
+
+    return;
+  }
+
+  player->Steering()->SetTarget(player->Ball()->Pos());
+
+  return;
+
   //if the player is the closest player to the ball, or the controller, or is in guard, then 
   //he should keep chasing it
   // just try another plan, see the end of this function...
+  /*
   if (player->isClosestTeamMemberToBall() || player->isControllingPlayer()
 	  || TRUE == player->Pitch()->InSameRegion(player, player->Ball()))
   {
@@ -253,7 +265,8 @@ void ChaseBall::Execute(FieldPlayer* player)
 
     return;
   }
-  
+  */
+
   // if the player is far from his home region, then get back.
   // just for red team...MUST BE after closest process...
   /*
@@ -272,9 +285,9 @@ void ChaseBall::Execute(FieldPlayer* player)
   //to his home region and wait for another opportunity
   //player->GetFSM()->ChangeState(ReturnToHomeRegion::Instance());
   // because wait is the central state, so get back to wait..
-  player->GetFSM()->ChangeState(Wait::Instance());
+  //player->GetFSM()->ChangeState(Wait::Instance());
 
-  return;
+  //return;
   //or try another plan: if one is return to home, then he lose control.
   //if team is lost control, then he will chase back, that will lead to a
   //dead loop ... so, the plan is bad, give it up...
@@ -585,7 +598,8 @@ void Guard::Execute(FieldPlayer *player)
 				return;
 			}
       
-      if(TRUE == player->isFarFromHomeRegion() && FALSE == player->isClosestTeamMemberToBall())
+      if(true == player->Pitch()->GoalKeeperHasBall() || (TRUE == player->isFarFromHomeRegion() 
+            && FALSE == player->isClosestTeamMemberToBall()))
       {
         player->GetFSM()->ChangeState(Wait::Instance());
 
