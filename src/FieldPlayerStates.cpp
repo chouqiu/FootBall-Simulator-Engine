@@ -243,17 +243,27 @@ void ChaseBall::Execute(FieldPlayer* player)
     return;
   }
 
-  //if team is control the ball and player isn't the closest member, he can go into wait status.
+  //if team is control the ball and player isn't the closest member, and, the ball is not in his region,
+  //then he can go into wait status.
   //if player is near his home region, or is closest to ball, or is in the same region with ball,
   //go and chase it.. @ning
-  if ((true == player->Team()->InControl() && false == player->isClosestTeamMemberToBall()
-          && false == player->isControllingPlayer())
-        || (true == player->isFarFromHomeRegion() && false == player->isClosestTeamMemberToBall()
-          && false == player->Pitch()->InSameRegion(player, player->Ball())))
+  if (false == player->isControllingPlayer() && false == player->isClosestTeamMemberToBall()
+		&& false == player->Pitch()->InSameRegion(player, player->Ball()))
   {
-    player->GetFSM()->ChangeState(Wait::Instance());
+	  //our team is attacking, so guard the position to support attack..@ning
+	  if (true == player->Team()->InControl())
+	  {
+		  player->GetFSM()->ChangeState(Guard::Instance());
 
-    return;
+		  return;
+	  }
+
+	  if (true == player->isFarFromHomeRegion())
+	  {
+		  player->GetFSM()->ChangeState(Wait::Instance());
+
+		  return;
+	  }
   }
 
   player->Steering()->SetTarget(player->Ball()->Pos());
